@@ -1,13 +1,13 @@
-// lib/screens/story_page.dart
+
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:math';
 import 'dart:async';
-import '../models/spooky_object.dart';
-import '../widgets/spooky_object_widget.dart';
-import '../widgets/twinkling_stars.dart';
-import '../routes/app_routes.dart';
-import '../utils/constants.dart';
+import '../spooky_object.dart';
+import '../spooky_object_widjet.dart';
+import '../twinking_stars.dart';
+import '../app_routes.dart';
+import '../constants.dart';
 
 class StoryPage extends StatefulWidget {
   const StoryPage({Key? key}) : super(key: key);
@@ -28,7 +28,18 @@ class _StoryPageState extends State<StoryPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _objects = SpookyObject.generateObjects(_random);
+    _initializeAudio();
     _startAnimation();
+  }
+
+  void _initializeAudio() async {
+    try {
+      await _sfxPlayer.setPlayerMode(PlayerMode.mediaPlayer);
+      await _sfxPlayer.setVolume(1.0);
+      print('SFX Player initialized');
+    } catch (e) {
+      print('SFX initialization error: $e');
+    }
   }
 
   void _startAnimation() {
@@ -48,19 +59,31 @@ class _StoryPageState extends State<StoryPage> with TickerProviderStateMixin {
 
     if (obj.isTrap) {
       // Play jump scare sound
-      // await _sfxPlayer.play(AssetSource('sounds/scream.mp3'));
+      _playSound('asssets/sounds/jump_scare.mp3');
       setState(() {
         _score = max(0, _score - AppConstants.trapPenalty);
       });
       _showTrapDialog();
     } else {
       // Play success sound
-      // await _sfxPlayer.play(AssetSource('sounds/success.mp3'));
+      _playSound('asssets/sounds/success.mp3');
       setState(() {
         _gameWon = true;
         _score += AppConstants.winScore;
       });
       _showWinDialog();
+    }
+  }
+
+  void _playSound(String soundPath) async {
+    try {
+      print('Attempting to play: $soundPath');
+      await _sfxPlayer.stop(); // Stop any current sound
+      await _sfxPlayer.setSource(AssetSource(soundPath));
+      await _sfxPlayer.resume();
+      print('Sound played: $soundPath');
+    } catch (e) {
+      print('Error playing sound $soundPath: $e');
     }
   }
 
@@ -174,13 +197,28 @@ class _StoryPageState extends State<StoryPage> with TickerProviderStateMixin {
         backgroundColor: Colors.deepPurple,
         actions: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
             child: Center(
               child: Text(
                 'Score: $_score',
                 style: AppConstants.scoreStyle,
               ),
             ),
+          ),
+          IconButton(
+            onPressed: () async {
+              print('Testing sound effect...');
+              try {
+                await _sfxPlayer.stop();
+                await _sfxPlayer.setSource(AssetSource('asssets/sounds/success.mp3'));
+                await _sfxPlayer.resume();
+                print('Sound effect test completed');
+              } catch (e) {
+                print('Sound effect test failed: $e');
+              }
+            },
+            icon: const Icon(Icons.volume_up, color: Colors.white),
+            tooltip: 'Test Sound',
           ),
         ],
       ),

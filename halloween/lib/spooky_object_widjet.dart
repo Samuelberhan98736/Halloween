@@ -1,8 +1,8 @@
-// lib/widgets/spooky_object_widget.dart
+
 import 'package:flutter/material.dart';
 import 'dart:math';
-import '../models/spooky_object.dart';
-import '../utils/constants.dart';
+import '../spooky_object.dart';
+import '../constants.dart';
 
 class SpookyObjectWidget extends StatefulWidget {
   final SpookyObject object;
@@ -56,11 +56,19 @@ class _SpookyObjectWidgetState extends State<SpookyObjectWidget>
               ),
             ],
           ),
-          child: Icon(
-            widget.object.icon,
-            size: 35,
-            color: widget.object.color,
-          ),
+          child: widget.object.isTrap 
+            ? Image.asset(
+                'asssets/images/ghost.png',
+                width: 35,
+                height: 35,
+                fit: BoxFit.contain,
+              )
+            : Image.asset(
+                'asssets/images/hiddenItem.png',
+                width: 35,
+                height: 35,
+                fit: BoxFit.contain,
+              ),
         );
       },
     );

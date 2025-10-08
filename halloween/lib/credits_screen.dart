@@ -1,6 +1,6 @@
-// lib/screens/credits_screen.dart
+
 import 'package:flutter/material.dart';
-import '../utils/constants.dart';
+import '../constants.dart';
 
 class CreditsScreen extends StatelessWidget {
   const CreditsScreen({Key? key}) : super(key: key);

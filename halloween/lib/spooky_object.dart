@@ -1,4 +1,4 @@
-// lib/models/spooky_object.dart
+
 import 'package:flutter/material.dart';
 import 'dart:math';
 

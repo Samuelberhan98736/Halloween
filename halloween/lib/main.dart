@@ -1,7 +1,6 @@
-// lib/main.dart
+// Mathew york and Sami Berhan
 import 'package:flutter/material.dart';
-import 'routes/app_routes.dart';
-import 'screens/splash_screen.dart';
+import 'app_routes.dart';
 
 void main() {
   runApp(const HalloweenStorybookApp());
